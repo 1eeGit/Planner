@@ -4,7 +4,9 @@
  */
 package application;
 
-public class taskPane {
+import javafx.scene.layout.GridPane;
+
+public class taskPane extends GridPane {
     private int taskID;
     private String taskName;
     private String taskDsc;
@@ -28,6 +30,7 @@ public class taskPane {
     }
 
     public taskPane() {
+	GridPane taskPane = new GridPane();
 
     }
 

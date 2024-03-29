@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 /**
@@ -19,10 +18,10 @@ public class Main extends Application {
 	    calendarPane dayPane = new calendarPane();
 	    TabPane tabPane = new TabPane();
 	    Tab tab_task = new Tab("Task");
-	    StackPane taskPane = new StackPane();
+	    taskPane taskPane = new taskPane();
 	    tab_task.setContent(taskPane);
 	    Tab tab_goal = new Tab("Goal");
-	    StackPane goalPane = new StackPane();
+	    goalPane goalPane = new goalPane();
 	    tab_goal.setContent(goalPane);
 	    tabPane.getTabs().addAll(tab_task, tab_goal);
 	    SplitPane splitPane = new SplitPane();
