@@ -8,6 +8,10 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+/**
+ * Main class for the planner application TabPane: Task, Goal SplistPane:
+ * Calendar, TabPane(Task/Goal)
+ */
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
@@ -15,16 +19,19 @@ public class Main extends Application {
 	    calendarPane dayPane = new calendarPane();
 	    TabPane tabPane = new TabPane();
 	    Tab tab_task = new Tab("Task");
-	    StackPane pane_task = new StackPane();
-	    tab_task.setContent(pane_task);
-	    // Tab tab_calendar = new Tab("Calendar");
-	    // tab_calendar.setContent(dayPane);
+	    StackPane taskPane = new StackPane();
+	    tab_task.setContent(taskPane);
 	    Tab tab_goal = new Tab("Goal");
+	    StackPane goalPane = new StackPane();
+	    tab_goal.setContent(goalPane);
 	    tabPane.getTabs().addAll(tab_task, tab_goal);
 	    SplitPane splitPane = new SplitPane();
 	    splitPane.getItems().addAll(dayPane, tabPane);
 
-	    Scene scene = new Scene(splitPane, 500, 300);
+	    /**
+	     * Set the default position of the divider
+	     */
+	    Scene scene = new Scene(splitPane, 700, 300);
 	    primaryStage.setTitle("Planner (V1.0)");
 	    primaryStage.setScene(scene);
 	    primaryStage.show();

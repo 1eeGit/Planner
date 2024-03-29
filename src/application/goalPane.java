@@ -1,9 +1,9 @@
 package application;
 
-public class goal {
-	private int goalID; private String goalName; private String goalDsc; private int goalDdl; private boolean goalStatus;
+public class goalPane {
+	      private int goalID; private String goalName; private String goalDsc; private int goalDdl; private boolean goalStatus;
 
-	public goal(int goalID, String goalName, String goalDsc, int goalDdl, boolean goalStatus) {
+	public goalPane(int goalID, String goalName, String goalDsc, int goalDdl, boolean goalStatus) {
 		super();
 		this.goalID = goalID;
 		this.goalName = goalName;
@@ -12,7 +12,7 @@ public class goal {
 		this.goalStatus = goalStatus;
 	}
 	
-	public goal() {
+	public goalPane() {
 		
 	}
 	
