@@ -1,0 +1,55 @@
+package application;
+
+import javafx.scene.layout.GridPane;
+
+public class goal extends GridPane {
+    private int goalID;
+    private String goalName;
+    private int goalDdl;
+    private boolean goalStatus;
+
+    public goal(int goalID, String goalName, int goalDdl, boolean goalStatus) {
+	super();
+	this.goalID = goalID;
+	this.goalName = goalName;
+	this.goalDdl = goalDdl;
+	this.goalStatus = goalStatus;
+    }
+
+    public goal() {
+
+    }
+
+    public int getGoalID() {
+	return goalID;
+    }
+
+    public void setGoalID(int goalID) {
+	this.goalID = goalID;
+    }
+
+    public String getGoalName() {
+	return goalName;
+    }
+
+    public void setGoalName(String goalName) {
+	this.goalName = goalName;
+    }
+
+    public int getGoalDdl() {
+	return goalDdl;
+    }
+
+    public void setGoalDdl(int goalDdl) {
+	this.goalDdl = goalDdl;
+    }
+
+    public boolean isGoalStatus() {
+	return goalStatus;
+    }
+
+    public void setGoalStatus(boolean goalStatus) {
+	this.goalStatus = goalStatus;
+    }
+
+}
