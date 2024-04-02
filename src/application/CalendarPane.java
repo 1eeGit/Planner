@@ -20,7 +20,7 @@ import javafx.scene.layout.GridPane;
  * calendarPane class for calendar view, allow user to navigate between months
  * show required month calendar in the left side of UI
  */
-public class calendarPane extends GridPane {
+public class CalendarPane extends GridPane {
     private int year;
     private int month;
     private int day;
@@ -34,7 +34,7 @@ public class calendarPane extends GridPane {
     /**
      * Default constructor
      */
-    public calendarPane() {
+    public CalendarPane() {
 	calendar = new GregorianCalendar();
 	month = currentDate.getMonthValue();
 	year = currentDate.getYear();
@@ -146,7 +146,7 @@ public class calendarPane extends GridPane {
 	 * calendar ???? some how it is not working as expected:???? Children: duplicate
 	 * children added: parent = Grid hgap=0.0, vgap=0.0, alignment=TOP_LEFT
 	 */
-	datePicker.setValue(LocalDate.of(year, month, 1));
+	datePicker.setValue(LocalDate.of(year, month, LocalDate.now().getDayOfMonth()));
 	datePicker.setOnAction(e -> {
 	    LocalDate selectedDate = datePicker.getValue();
 	    if (selectedDate.getYear() != year || selectedDate.getMonthValue() != month) {
@@ -178,16 +178,15 @@ public class calendarPane extends GridPane {
     }
 
     /**
-     * Mouse event actions for day labels
+     * Mouse event actions for day labels Show different border color when mouse
+     * entered, exited and clicked
      * 
      * @param calendarPane
      * @param dayLabel
+     * @param date
      */
-    public void mouseEvent(calendarPane calendarPane, Label dayLabel, int date) {
+    public void mouseEvent(CalendarPane calendarPane, Label dayLabel, int date) {
 	int currentDay = calendarPane.currentDate.getDayOfMonth();
-	/**
-	 * Show different border color when mouse entered, exited and clicked
-	 */
 	dayLabel.setOnMouseEntered(e -> dayLabel.setStyle("-fx-border-color: blue; -fx-padding: 5px;"));
 	dayLabel.setOnMouseExited(e -> {
 	    dayLabel.setStyle("-fx-border-color: lightgray; -fx-padding: 5px;");
@@ -211,7 +210,7 @@ public class calendarPane extends GridPane {
     /**
      * Print the calendar test
      */
-    public void calendarTest(calendarPane cp) {
+    public void calendarTest(CalendarPane cp) {
 	int year = cp.getYear();
 	int month = cp.getMonth();
 	int dayMax = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -220,7 +219,7 @@ public class calendarPane extends GridPane {
 		+ ",1st weekday is: " + firstDay);
     }
 
-    public calendarPane(int year, int month, int day, Calendar calendar) {
+    public CalendarPane(int year, int month, int day, Calendar calendar) {
 	super();
 	this.year = year;
 	this.month = month;

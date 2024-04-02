@@ -1,3 +1,7 @@
+/**
+ * Main.java
+ * Author: Li Sheng
+ */
 package application;
 
 import javafx.application.Application;
@@ -15,13 +19,13 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 	try {
-	    calendarPane dayPane = new calendarPane();
+	    CalendarPane dayPane = new CalendarPane();
 	    TabPane tabPane = new TabPane();
 	    Tab tab_task = new Tab("Task");
-	    taskPane taskPane = new taskPane();
+	    TaskPane taskPane = new TaskPane();
 	    tab_task.setContent(taskPane);
 	    Tab tab_goal = new Tab("Goal");
-	    goalPane goalPane = new goalPane();
+	    GoalPane goalPane = new GoalPane();
 	    tab_goal.setContent(goalPane);
 	    tabPane.getTabs().addAll(tab_task, tab_goal);
 	    SplitPane splitPane = new SplitPane();
@@ -41,5 +45,6 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 	launch(args);
+
     }
 }

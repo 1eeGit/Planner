@@ -1,1 +1,1 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"application","l":"calendarPane"}];updateSearchResults();
+typeSearchIndex = [{"p":"application","l":"Activity"},{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"application","l":"CalendarPane"},{"p":"application","l":"Event"},{"p":"application","l":"Goal"},{"p":"application","l":"GoalPane"},{"p":"application","l":"Main"},{"p":"application","l":"Task"},{"p":"application","l":"TaskPane"}];updateSearchResults();
