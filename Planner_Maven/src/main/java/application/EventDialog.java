@@ -13,13 +13,12 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Class EventDialog.
+ * EventDialog class for dialog window to input event data
  */
 public class EventDialog extends Dialog {
     /**
-     *  
+     * Constructor for EventDialog
      */
     public EventDialog() {
 	setTitle("Event Dialog");
@@ -54,11 +53,10 @@ public class EventDialog extends Dialog {
     }
 
     /**
-     * Show and get data.
+     * Method to show the dialog and get the input data
      *
      * @return the event data
      */
-// Method to show the dialog and get the input data
     public EventData showAndGetData() {
 	return (EventData) showAndWait().orElse(null);
     }

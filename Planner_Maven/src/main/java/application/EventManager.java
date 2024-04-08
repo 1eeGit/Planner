@@ -6,6 +6,7 @@ package application;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Interface for Event objects: task, goal and activity; including: createEvent
@@ -66,4 +67,9 @@ public interface EventManager {
     void modifyEvent(Goal goal);
 
     void modifyEvent(Activity activity);
+
+    /**
+     * Return event list from database
+     */
+    public List<Event> getEventList(int type, String db, LocalDate date);
 }

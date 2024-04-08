@@ -5,7 +5,6 @@
 package application;
 
 import java.time.LocalDate;
-import java.util.List;
 
 /**
  * <subclass of Event> Goal class for goal object: Each goal has a deadline, and
@@ -41,13 +40,4 @@ public class Goal extends Event {
 		+ this.isStatus());
     }
 
-    /**
-     * Retrieve goal list from database name db
-     * 
-     * @param db
-     * @return
-     */
-    public static List<Goal> getGoals(String db) {
-	return SQLiteDB.getGoals(db);
-    }
 }

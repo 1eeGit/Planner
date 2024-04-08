@@ -70,8 +70,9 @@ public class GoalPane extends GridPane {
     public void showGoal() {
 	VBox goalList = new VBox(15);
 	/** change database name when not testing **/
-	List<Goal> goalDBList = Goal.getGoals("testDB.db");
-	for (Goal goal : goalDBList) {
+	EventManagement eventManagement = new EventManagement();
+	List<Event> goalDBList = eventManagement.getEventList(1, "testDB.db", null);
+	for (Event goal : goalDBList) {
 	    goalList.getChildren().add(goalView(goal));
 	}
 	goalList.getChildren().add(new Label("Total: " + goalDBList.size() + " goals"));
@@ -85,7 +86,7 @@ public class GoalPane extends GridPane {
      * @param goal
      * @return
      */
-    public HBox goalView(Goal goal) {
+    public HBox goalView(Event goal) {
 	boolean goalStatus = goal.isStatus();
 	String goalName = goal.getName();
 	LocalDate goalDdl = goal.getDate();

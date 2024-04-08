@@ -6,26 +6,16 @@ package application;
 
 import java.time.LocalDate;
 
-// TODO: Auto-generated Javadoc
 /**
  * Abstract class for Event object: task, goal and activity; each event has a
  * name, status, date, ID and type.
  */
 public abstract class Event {
-
-    /** The name. */
+    /** Common data fields between events **/
     private String name;
-
-    /** The status. */
     private boolean status;
-
-    /** The date. */
     private LocalDate date;
-
-    /** The id. */
     private int ID;
-
-    /** The type. */
     protected String type;
 
     /**

@@ -7,11 +7,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The Class SQLiteDB includes methods related to database management:
@@ -241,15 +237,16 @@ public class SQLiteDB {
 	String url = SQLITE_CONNECTION_PREFIX + db;
 	createTable(url);
 	/** test data: Goal 1-3; Task 4-6; Activity 7-9; task matches with activity */
+	String today = String.valueOf(java.time.LocalDate.now());
 	insertEvent("Goal 1", 0, "2023-11-30", "1", url);
-	insertEvent("Goal 2", 1, "2024-04-10", "1", url);
-	insertEvent("Goal 3", 0, "2024-03-29", "1", url);
+	insertEvent("Goal 2", 0, "2024-04-10", "1", url);
+	insertEvent("Goal 3", 1, today, "1", url);
 	insertEvent("Task 1", 0, "2023-11-30", "2", url);
 	insertEvent("Task 2", 1, "2024-04-10", "2", url);
-	insertEvent("Task 3", 0, "2024-03-29", "2", url);
+	insertEvent("Task 3", 0, today, "2", url);
 	insertEvent("Activity 1", 0, "2023-11-30", "3", url);
 	insertEvent("Activity 2", 1, "2024-04-10", "3", url);
-	insertEvent("Activity 3", 0, "2024-03-29", "3", url);
+	insertEvent("Activity 3", 0, today, "3", url);
 	insertTask(4, 7, url);
 	insertTask(5, 8, url);
 	insertTask(6, 9, url);
@@ -258,31 +255,4 @@ public class SQLiteDB {
 	insertActivity(9, "18:00", "20:00", 6, url);
 
     }
-
-    /**
-     * Retrieve all goals from the event table of URL database. return as ArrayList.
-     * 
-     * @param url
-     * @return
-     */
-    public static List<Goal> getGoals(String db) {
-	String url = SQLITE_CONNECTION_PREFIX + db;
-	String getGoal = "SELECT * FROM event WHERE type =1 ORDER BY status, "
-		+ "CASE WHEN status =0 THEN date END ASC," + "CASE WHEN status =1 THEN date END DESC;";
-	List<Goal> goals = new ArrayList<>();
-	try (Connection conn = DriverManager.getConnection(url);
-		PreparedStatement PS = conn.prepareStatement(getGoal);
-		ResultSet RS = PS.executeQuery()) {
-	    while (RS.next()) {
-		LocalDate date = LocalDate.parse(RS.getString("date"));
-		Boolean status = RS.getInt("status") == 1;
-		Goal goal = new Goal(RS.getString("name"), date, status, RS.getInt("id"));
-		goals.add(goal);
-	    }
-	} catch (SQLException e) {
-	    System.out.println(e.getMessage());
-	}
-	return goals;
-    }
-
 }

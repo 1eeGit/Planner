@@ -5,6 +5,7 @@
 package application;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,7 +40,7 @@ public class TaskPane extends GridPane {
      * 
      * @param task
      */
-    public HBox taskView(Task task) {
+    public HBox taskView(Event task) {
 	CheckBox taskStatus = new CheckBox();
 	taskStatus.setSelected(task.isStatus());
 	HBox cboxHbox = new HBox(15);
@@ -64,7 +65,12 @@ public class TaskPane extends GridPane {
 	GridPane taskListPane = new GridPane();
 	this.getChildren().remove(taskListPane);
 	int taskRow = 0;
-	for (Task task : taskList) {
+	/** change database name when not testing **/
+	EventManagement eventManagement = new EventManagement();
+	/** show today's tasks by default */
+	LocalDate date = LocalDate.now();
+	List<Event> taskList = eventManagement.getEventList(2, "testDB.db", date);
+	for (Event task : taskList) {
 	    HBox taskView = taskView(task);
 	    taskListPane.add(taskView, 1, taskRow++);
 	}
@@ -75,13 +81,6 @@ public class TaskPane extends GridPane {
      * Update the taskPane
      */
     public void updateTaskPane() {
-	/**
-	 * Test data for task
-	 */
-	taskList.addAll(new Task(1, "Task1", false, LocalDate.now(), 1),
-		new Task(2, "Task2", false, LocalDate.of(2024, 3, 31), 0),
-		new Task(3, "Task3", true, LocalDate.of(2024, 3, 31), 0),
-		new Task(4, "Task4", true, LocalDate.now(), 2));
 	showTask();
     }
 }

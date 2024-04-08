@@ -6,16 +6,15 @@ package application;
 
 import java.time.LocalDate;
 
-// TODO: Auto-generated Javadoc
 /**
- * <subclass of Event> Task class for task object: Each task is created at a
+ * *<subclass of Event> Task class for task object: Each task is created at a
  * specific date, and can only be modified at that date, can only be related to
  * one activity recorded at the same date.
  */
 public class Task extends Event {
 
-    /** The task related act. */
-    private int taskRelatedAct; // related activity ID
+    /** related activity ID */
+    private int taskRelatedAct;
 
     /**
      * Task constructor with parameters

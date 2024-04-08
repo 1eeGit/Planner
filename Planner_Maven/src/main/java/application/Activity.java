@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-// TODO: Auto-generated Javadoc
 /**
  * <subclass of Event> Task class for activity object: Each activity is created
  * at a specific date, and can only be modified at that date, can only be
@@ -17,10 +16,7 @@ import java.time.LocalTime;
  */
 public class Activity extends Event {
 
-    /** The act stime. */
     private LocalDateTime actStime;
-
-    /** The act etime. */
     private LocalDateTime actEtime;
 
     /** The act related task. */
