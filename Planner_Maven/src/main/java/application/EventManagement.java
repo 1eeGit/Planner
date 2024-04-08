@@ -20,40 +20,37 @@ import java.util.List;
  * methods from interface.
  */
 public class EventManagement implements EventManager {
+    String db = "jdbc:sqlite:testDB.db";
+
     /**
-     * Create new event object
+     * Create new event object No need for int ID since it is auto-incremented in
+     * database.
      */
     @Override
-    public Task createEvent(int taskID, String taskName, boolean taskStatus, LocalDate taskDate, int taskRelatedAct) {
-	return new Task(taskID, taskName, taskStatus, taskDate, taskRelatedAct);
+    public void createEvent(String taskName, int taskStatus, LocalDate taskDate, int taskRelatedAct) {
+	// return new Task(taskName, taskStatus, taskDate, taskRelatedAct);
     }
 
     @Override
-    public Activity createEvent(int actID, String actName, LocalDateTime actStime, LocalDateTime actEtime,
-	    int actRelatedTask, LocalDate date) {
-	return new Activity(actID, actName, actStime, actEtime, actRelatedTask, date);
+    public void createEvent(String actName, LocalDateTime actStime, LocalDateTime actEtime, int actRelatedTask,
+	    LocalDate date) {
+	// return new Activity(actName, actStime, actEtime, actRelatedTask, date);
     }
 
     @Override
-    public Goal createEvent(String goalName, LocalDate goalDdl, boolean goalStatus, int goalID) {
-	return new Goal(goalName, goalDdl, goalStatus, goalID);
+    public void createEvent(String goalName, LocalDate goalDdl, int goalStatus) {
+	// insert new goal into database and get the new goal ID then set it to the new
+	// goal object
+	SQLiteDB.insertEvent(goalName, 0, goalDdl.toString(), 1, db);
+	// return new Goal(goalName, goalDdl, goalStatus);
     }
 
     /**
      * Delete event object
      */
     @Override
-    public void deleteEvent(Task task) {
-
-    }
-
-    @Override
-    public void deleteEvent(Goal goal) {
-    }
-
-    @Override
-    public void deleteEvent(Activity activity) {
-
+    public void deleteEvent(Event event) {
+	SQLiteDB.deleteEvent(event.getID(), db);
     }
 
     /**

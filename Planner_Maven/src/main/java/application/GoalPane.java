@@ -5,10 +5,11 @@
 package application;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -17,14 +18,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-// TODO: Auto-generated Javadoc
 /**
  * GoalPane class for goal view in the right side Tab of the UI
  */
 public class GoalPane extends GridPane {
-
-    /** The event manager. */
-    private EventManagement eventManager;
+    private VBox goalList = new VBox(15);
+    // Create eventManager object, or the method cannot be invoked
+    EventManagement eventManager = new EventManagement();
     /**
      * Default width and style for the goalPane: 60 for the status circle, 100 for
      * goal name, 80 for status Circle color: BLACK for complete, GREY for
@@ -54,11 +54,8 @@ public class GoalPane extends GridPane {
 	    goalHeader.getChildren().add(headHbox);
 	}
 	this.add(goalHeader, 1, 0);
-	Button goalButton = new Button("Add Goal");
-	goalButton.setStyle(stringStyle);
-	goalButton.setOnAction(e -> addGoal());
-	goalButton.setAlignment(Pos.BOTTOM_CENTER);
-	this.add(goalButton, 1, 3);
+
+	this.add(goalList, 1, 1);
 	updateGoal();
     }
 
@@ -68,7 +65,7 @@ public class GoalPane extends GridPane {
      * time. The order is sorted by the database query.
      */
     public void showGoal() {
-	VBox goalList = new VBox(15);
+	goalList.getChildren().clear();
 	/** change database name when not testing **/
 	EventManagement eventManagement = new EventManagement();
 	List<Event> goalDBList = eventManagement.getEventList(1, "testDB.db", null);
@@ -76,23 +73,29 @@ public class GoalPane extends GridPane {
 	    goalList.getChildren().add(goalView(goal));
 	}
 	goalList.getChildren().add(new Label("Total: " + goalDBList.size() + " goals"));
-	this.getChildren().remove(goalList); // remove the old goalList
-	this.add(goalList, 1, 1);
     }
 
     /**
      * Create single goal view use HBox and default width
      * 
-     * @param goal
+     * @param event
      * @return
      */
-    public HBox goalView(Event goal) {
-	boolean goalStatus = goal.isStatus();
-	String goalName = goal.getName();
-	LocalDate goalDdl = goal.getDate();
+    public HBox goalView(Event event) {
+	boolean goalStatus = event.isStatus();
+	String goalName = event.getName();
+	LocalDate goalDdl = event.getDate();
 	Circle statusCircle = new Circle(8);
 	HBox goalView = new HBox(15);
 	String goalStatusCell;
+	/**
+	 * Set the userData of the goalView to the goal object, so that the goal object
+	 * can be retrieved when the goalView is clicked
+	 */
+	ContextMenu contextMenu = EventDialog.createContextMenu(a -> addGoal(), a -> deleteGoal(event),
+		a -> editGoal(event));
+	goalView.setOnContextMenuRequested(e -> contextMenu.show(goalView, e.getScreenX(), e.getScreenY()));
+
 	/**
 	 * Set the color of the status circle and text of the status cell according to
 	 * the status of the goal
@@ -107,10 +110,12 @@ public class GoalPane extends GridPane {
 	    goalStatusCell = "Incomplete";
 	} else {// if the goal is incomplete and the ddl is not passed
 	    statusCircle.setFill(Color.WHITE);
-	    long days = LocalDate.now().until(goalDdl).getDays(); // calculate the days left
+	    // long days = LocalDate.now().until(goalDdl).getDays();
+	    // getDays will not calculate the days correctly between different months
+	    long days = ChronoUnit.DAYS.between(LocalDate.now(), goalDdl);
 	    goalStatusCell = days + " days left";
 	}
-	;
+
 	StackPane circleStack = new StackPane(statusCircle);
 	circleStack.setPrefWidth(hboxWidth[0]);
 	circleStack.setAlignment(Pos.CENTER);
@@ -134,16 +139,38 @@ public class GoalPane extends GridPane {
     }
 
     /**
-     * Adds the goal.
+     * Add new goal via EventDialog
      */
     private void addGoal() {
 	EventDialog dialog = new EventDialog();
 	EventData data = dialog.showAndGetData();
+	Goal goal = null;
+	// Create eventManager object, or the method cannot be invoked
+	EventManagement eventManager = new EventManagement();
 	if (data != null) {
-	    Goal goal = eventManager.createEvent(data.getName(), data.getDate(), true, 1);
-
+	    eventManager.createEvent(data.getName(), data.getDate(), 1);
 	    updateGoal();
 	}
-
     }
+
+    /**
+     * Delete goal
+     * 
+     * @param event
+     */
+    private void deleteGoal(Event event) {
+	eventManager.deleteEvent(event);
+	updateGoal();
+    }
+
+    /**
+     * Edit goal
+     * 
+     * @param event
+     */
+    private void editGoal(Event event) {
+	// eventManager.modifyEvent(event);
+	updateGoal();
+    }
+
 }

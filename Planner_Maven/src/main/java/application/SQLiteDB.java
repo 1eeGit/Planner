@@ -40,7 +40,8 @@ public class SQLiteDB {
     }
 
     /**
-     * Create event, task and activity tables in the URL database.
+     * Create event, task and activity tables in the URL database. ID is
+     * auto-incremented in event table.
      * 
      * @param url
      */
@@ -79,14 +80,14 @@ public class SQLiteDB {
      * @param type
      * @param url
      */
-    public static void insertEvent(String name, int status, String date, String type, String url) {
+    public static void insertEvent(String name, int status, String date, int type, String url) {
 	String insertSQL = "INSERT INTO event (name, status, date, type) VALUES (?,?,?,?)";
 	try (Connection conn = DriverManager.getConnection(url);
 		PreparedStatement PS = conn.prepareStatement(insertSQL)) {
 	    PS.setString(1, name);
 	    PS.setInt(2, status);
 	    PS.setString(3, date);
-	    PS.setString(4, type);
+	    PS.setInt(4, type);
 	    PS.executeUpdate();
 	    conn.commit();
 	} catch (SQLException e) {
@@ -238,21 +239,20 @@ public class SQLiteDB {
 	createTable(url);
 	/** test data: Goal 1-3; Task 4-6; Activity 7-9; task matches with activity */
 	String today = String.valueOf(java.time.LocalDate.now());
-	insertEvent("Goal 1", 0, "2023-11-30", "1", url);
-	insertEvent("Goal 2", 0, "2024-04-10", "1", url);
-	insertEvent("Goal 3", 1, today, "1", url);
-	insertEvent("Task 1", 0, "2023-11-30", "2", url);
-	insertEvent("Task 2", 1, "2024-04-10", "2", url);
-	insertEvent("Task 3", 0, today, "2", url);
-	insertEvent("Activity 1", 0, "2023-11-30", "3", url);
-	insertEvent("Activity 2", 1, "2024-04-10", "3", url);
-	insertEvent("Activity 3", 0, today, "3", url);
+	insertEvent("Goal 1", 0, "2023-11-30", 1, url);
+	insertEvent("Goal 2", 0, "2024-04-10", 1, url);
+	insertEvent("Goal 3", 1, today, 1, url);
+	insertEvent("Task 1", 0, "2023-11-30", 2, url);
+	insertEvent("Task 2", 1, "2024-04-10", 2, url);
+	insertEvent("Task 3", 0, today, 2, url);
+	insertEvent("Activity 1", 0, "2023-11-30", 3, url);
+	insertEvent("Activity 2", 1, "2024-04-10", 3, url);
+	insertEvent("Activity 3", 0, today, 3, url);
 	insertTask(4, 7, url);
 	insertTask(5, 8, url);
 	insertTask(6, 9, url);
 	insertActivity(7, "10:00", "12:00", 4, url);
 	insertActivity(8, "14:00", "16:00", 5, url);
 	insertActivity(9, "18:00", "20:00", 6, url);
-
     }
 }

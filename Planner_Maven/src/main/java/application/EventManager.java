@@ -19,7 +19,6 @@ public interface EventManager {
     /**
      * Create new event object
      * 
-     * @param ID
      * @param name
      * @param status
      * @param date
@@ -27,40 +26,30 @@ public interface EventManager {
      * @param specific data field
      * @return
      */
-    Task createEvent(int taskID, String taskName, boolean taskStatus, LocalDate taskDate, int taskRelatedAct);
+    void createEvent(String taskName, int taskStatus, LocalDate taskDate, int taskRelatedAct);
 
-    Activity createEvent(int actID, String actName, LocalDateTime actStime, LocalDateTime actEtime, int actRelatedTask,
+    void createEvent(String actName, LocalDateTime actStime, LocalDateTime actEtime, int actRelatedTask,
 	    LocalDate date);
 
-    Goal createEvent(String goalName, LocalDate goalDdl, boolean goalStatus, int goalID);
+    void createEvent(String goalName, LocalDate goalDdl, int goalStatus); // goalStatus is 0 for uncompleted, 1 for
+									  // completed
 
     /**
      * Delete event object
      * 
-     * @param ID
-     * @param name
-     * @param status
-     * @param date
-     * @param type
-     * @param specific event data field
-     * @return
+     * @param event
      */
-    void deleteEvent(Task task);
+    void deleteEvent(Event event);
 
-    void deleteEvent(Goal goal);
-
-    void deleteEvent(Activity activity);
+    /**
+     * void deleteEvent(Task task); void deleteEvent(Goal goal); void
+     * deleteEvent(Activity activity);
+     */
 
     /**
      * Modify event object
      * 
-     * @param ID
-     * @param name
-     * @param status
-     * @param date
-     * @param type
-     * @param specific event data field
-     * @return
+     * @param task
      */
     void modifyEvent(Task task);
 
