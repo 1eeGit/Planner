@@ -42,23 +42,21 @@ public interface EventManager {
     void deleteEvent(Event event);
 
     /**
-     * void deleteEvent(Task task); void deleteEvent(Goal goal); void
-     * deleteEvent(Activity activity);
-     */
-
-    /**
-     * Modify event object
-     * 
-     * @param task
-     */
-    void modifyEvent(Task task);
-
-    void modifyEvent(Goal goal);
-
-    void modifyEvent(Activity activity);
-
-    /**
      * Return event list from database
      */
     public List<Event> getEventList(int type, String db, LocalDate date);
+
+    /**
+     * Update event status, first INT is status, second is event ID
+     * 
+     * @param event
+     * @param status
+     */
+    void updateEstatus(Event event, int status);
+
+    /**
+     * Modify event object
+     */
+    void modifyEvent(Event event, String newName, LocalDate newDate);
+
 }

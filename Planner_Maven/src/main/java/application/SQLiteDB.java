@@ -97,24 +97,40 @@ public class SQLiteDB {
     }
 
     /**
-     * Update event in the event table of URL database.
+     * Update event name and date in the event table of URL database. Type is not
+     * allowed to be modified.
      * 
      * @param id
      * @param name
-     * @param status
      * @param date
-     * @param type
      * @param url
      */
-    public static void updateEvent(int id, String name, int status, String date, String type, String url) {
-	String updateSQL = "UPDATE event SET name = ?, status = ?, date = ?, type = ? WHERE id = ?";
+    public static void updateEvent(int id, String name, String date, String type, String url) {
+	String updateSQL = "UPDATE event SET name = ?, date = ? WHERE id = ?";
 	try (Connection conn = DriverManager.getConnection(url);
 		PreparedStatement PS = conn.prepareStatement(updateSQL)) {
 	    PS.setString(1, name);
-	    PS.setInt(2, status);
-	    PS.setString(3, date);
-	    PS.setString(4, type);
-	    PS.setInt(5, id);
+	    PS.setString(2, date);
+	    PS.setInt(3, id);
+	    PS.executeUpdate();
+	    conn.commit();
+	} catch (SQLException e) {
+	    System.out.println(e.getMessage());
+	}
+    }
+
+    /**
+     * Update ONLY event status in the event table of URL database.
+     * 
+     * @param id
+     * @param status
+     */
+    public static void updateEstatus(int status, int id, String url) {
+	String updateStatus = "UPDATE event SET status = ? WHERE id = ?";
+	try (Connection conn = DriverManager.getConnection(url);
+		PreparedStatement PS = conn.prepareStatement(updateStatus)) {
+	    PS.setInt(1, status);
+	    PS.setInt(2, id);
 	    PS.executeUpdate();
 	    conn.commit();
 	} catch (SQLException e) {

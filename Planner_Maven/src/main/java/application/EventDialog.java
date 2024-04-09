@@ -96,6 +96,7 @@ public class EventDialog extends Dialog {
      * @return
      */
     public static ContextMenu addContextMenu(Consumer<ActionEvent> onAdd) {
+	// will not disappear??
 	ContextMenu contextMenu = new ContextMenu();
 	MenuItem addItem = new MenuItem("Add");
 	contextMenu.getItems().add(addItem);

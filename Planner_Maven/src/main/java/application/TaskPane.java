@@ -56,6 +56,11 @@ public class TaskPane extends GridPane {
     public static HBox taskView(Event task) {
 	CheckBox taskStatus = new CheckBox();
 	taskStatus.setSelected(task.isStatus());
+	// set listener to update the status of the task
+	taskStatus.setOnAction(e -> {
+	    int newStatus = taskStatus.isSelected() ? 1 : 0;
+	    eventManager.updateEstatus(task, newStatus);
+	});
 	HBox cboxHbox = new HBox(15);
 	cboxHbox.getChildren().add(taskStatus);
 	cboxHbox.setAlignment(Pos.CENTER);
@@ -80,7 +85,18 @@ public class TaskPane extends GridPane {
 	return taskView;
     }
 
+    /**
+     * Edit the task
+     * 
+     * @param event
+     */
     private static void editTask(Event event) {
+	EventDialog dialog = new EventDialog();
+	EventData data = dialog.showAndGetData();
+	if (data != null) {
+	    eventManager.modifyEvent(event, data.getName(), data.getDate());
+	    updateTask();
+	}
 
     }
 

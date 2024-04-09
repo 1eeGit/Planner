@@ -9,6 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javafx.geometry.Pos;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -32,7 +33,7 @@ public class GoalPane extends GridPane {
      * incomplete and passed DDL, WHITE for incomplete and not passed DDL HBox
      * default height:15
      */
-    Integer[] hboxWidth = { 60, 100, 80 };
+    Integer[] hboxWidth = { 60, 100, 100, 60 };
     /** The string style. */
     String stringStyle = "-fx-font-size: 15px; -fx-font-family: Arial; -fx-text-fill: BLACK;";
 
@@ -50,7 +51,7 @@ public class GoalPane extends GridPane {
 	    }
 	});
 	HBox goalHeader = new HBox(20);
-	String[] header = { "", "Goal", "Status" };
+	String[] header = { "", "Goal", "Status", "" };
 	for (int i = 0; i < header.length; i++) {
 	    HBox headHbox = new HBox(15);
 	    Label headLabel = new Label(header[i]);
@@ -122,6 +123,17 @@ public class GoalPane extends GridPane {
 	    long days = ChronoUnit.DAYS.between(LocalDate.now(), goalDdl);
 	    goalStatusCell = days + " days left";
 	}
+	/**
+	 * add CheckBox for change goal status, set listener to update the status in
+	 * database
+	 */
+	CheckBox goalStatusBox = new CheckBox();
+	goalStatusBox.setSelected(event.isStatus());
+	goalStatusBox.setOnAction(e -> {
+	    int newStatus = goalStatusBox.isSelected() ? 1 : 0;
+	    eventManager.updateEstatus(event, newStatus);
+	    updateGoal();
+	});
 
 	StackPane circleStack = new StackPane(statusCircle);
 	circleStack.setPrefWidth(hboxWidth[0]);
@@ -129,8 +141,12 @@ public class GoalPane extends GridPane {
 	goalView.getChildren().add(circleStack);
 	String[] goalInfo = { goalName, goalStatusCell };
 
+	/**
+	 * Add goal name and status text to the goalView
+	 */
 	for (int i = 0; i < 2; i++) {
 	    HBox goalHbox = new HBox(15, new Label(goalInfo[i]));
+	    goalHbox.getChildren().add(goalStatusBox);
 	    goalHbox.setPrefWidth(hboxWidth[i + 1]);
 	    goalHbox.setAlignment(Pos.CENTER);
 	    goalView.getChildren().add(goalHbox);
@@ -175,7 +191,18 @@ public class GoalPane extends GridPane {
      * @param event
      */
     private void editGoal(Event event) {
-	// eventManager.modifyEvent(event);
+	EventDialog dialog = new EventDialog();
+	EventData data = dialog.showAndGetData();
+	if (data != null) {
+	    eventManager.modifyEvent(event, data.getName(), data.getDate());
+	    updateGoal();
+	}
+    }
+
+    /**
+     * Add new goal via EventDialog
+     */
+    private void addGoal(EventData data) {
 	updateGoal();
     }
 

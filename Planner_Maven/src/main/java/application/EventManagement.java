@@ -53,19 +53,22 @@ public class EventManagement implements EventManager {
     }
 
     /**
+     * Update event status, first INT is status, second is event ID
+     * 
+     * @param event
+     * @param status
+     */
+    @Override
+    public void updateEstatus(Event event, int status) {
+	SQLiteDB.updateEstatus(status, event.getID(), db);
+    }
+
+    /**
      * Modify event object
      */
     @Override
-    public void modifyEvent(Task task) {
-
-    }
-
-    @Override
-    public void modifyEvent(Goal goal) {
-    }
-
-    @Override
-    public void modifyEvent(Activity activity) {
+    public void modifyEvent(Event event, String newName, LocalDate newDate) {
+	SQLiteDB.updateEvent(event.getID(), newName, newDate.toString(), event.getType(), db);
     }
 
     /**
