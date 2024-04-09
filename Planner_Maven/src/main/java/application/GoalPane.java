@@ -22,7 +22,8 @@ import javafx.scene.shape.Circle;
  * GoalPane class for goal view in the right side Tab of the UI
  */
 public class GoalPane extends GridPane {
-    private VBox goalList = new VBox(15);
+    static VBox goalList = new VBox(15);
+
     // Create eventManager object, or the method cannot be invoked
     EventManagement eventManager = new EventManagement();
     /**
@@ -32,7 +33,6 @@ public class GoalPane extends GridPane {
      * default height:15
      */
     Integer[] hboxWidth = { 60, 100, 80 };
-
     /** The string style. */
     String stringStyle = "-fx-font-size: 15px; -fx-font-family: Arial; -fx-text-fill: BLACK;";
 
@@ -40,8 +40,15 @@ public class GoalPane extends GridPane {
      * Default constructor
      */
     public GoalPane() {
-	// this.eventManager = eventManager;
-	GridPane goalPane = new GridPane();
+	goalList.setPrefSize(300, 200);
+	ContextMenu contextMenu = EventDialog.addContextMenu(a -> addGoal());
+	goalList.setOnContextMenuRequested(e -> {
+	    // only show addContextMenu when right click on empty area
+	    // which means the target is not HBox - goalView
+	    if (!(e.getTarget() instanceof HBox)) {
+		contextMenu.show(goalList, e.getScreenX(), e.getScreenY());
+	    }
+	});
 	HBox goalHeader = new HBox(20);
 	String[] header = { "", "Goal", "Status" };
 	for (int i = 0; i < header.length; i++) {
@@ -86,7 +93,7 @@ public class GoalPane extends GridPane {
 	String goalName = event.getName();
 	LocalDate goalDdl = event.getDate();
 	Circle statusCircle = new Circle(8);
-	HBox goalView = new HBox(15);
+	HBox goalView = new HBox(20);
 	String goalStatusCell;
 	/**
 	 * Set the userData of the goalView to the goal object, so that the goal object
@@ -144,7 +151,6 @@ public class GoalPane extends GridPane {
     private void addGoal() {
 	EventDialog dialog = new EventDialog();
 	EventData data = dialog.showAndGetData();
-	Goal goal = null;
 	// Create eventManager object, or the method cannot be invoked
 	EventManagement eventManager = new EventManagement();
 	if (data != null) {

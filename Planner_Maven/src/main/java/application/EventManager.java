@@ -26,7 +26,7 @@ public interface EventManager {
      * @param specific data field
      * @return
      */
-    void createEvent(String taskName, int taskStatus, LocalDate taskDate, int taskRelatedAct);
+    void createEvent(String taskName, int taskStatus, LocalDate taskDate);
 
     void createEvent(String actName, LocalDateTime actStime, LocalDateTime actEtime, int actRelatedTask,
 	    LocalDate date);

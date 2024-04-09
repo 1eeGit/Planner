@@ -4,7 +4,6 @@
 
 package application;
 
-import java.time.LocalDate;
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
@@ -13,6 +12,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -33,11 +33,14 @@ public class EventDialog extends Dialog {
 	grid.setVgap(10);
 
 	TextField nameField = new TextField();
-	nameField.setPromptText("Name");
+	Label name = new Label("Event Name:");
+	grid.add(name, 1, 0);
+	Label date = new Label("Date:");
+	grid.add(date, 1, 1);
 
 	DatePicker datePicker = new DatePicker();
-	grid.add(nameField, 1, 0);
-	grid.add(datePicker, 1, 1);
+	grid.add(nameField, 2, 0);
+	grid.add(datePicker, 2, 1);
 
 	getDialogPane().setContent(grid);
 
@@ -76,35 +79,28 @@ public class EventDialog extends Dialog {
     public static ContextMenu createContextMenu(Consumer<ActionEvent> onAdd, Consumer<ActionEvent> onDelete,
 	    Consumer<ActionEvent> onEdit) {
 	ContextMenu contextMenu = new ContextMenu();
-
 	MenuItem addItem = new MenuItem("Add");
 	addItem.setOnAction(onAdd::accept);
-
 	MenuItem deleteItem = new MenuItem("Delete");
 	deleteItem.setOnAction(onDelete::accept);
-
 	MenuItem editItem = new MenuItem("Edit");
 	editItem.setOnAction(onEdit::accept);
-
 	contextMenu.getItems().addAll(addItem, deleteItem, editItem);
 	return contextMenu;
     }
-}
 
-class EventData {
-    private String name;
-    private LocalDate date;
-
-    public EventData(String name, LocalDate date) {
-	this.name = name;
-	this.date = date;
+    /**
+     * context menu ONLY for add, this method is used in empty pane area, when there
+     * is no event listed
+     * 
+     * @return
+     */
+    public static ContextMenu addContextMenu(Consumer<ActionEvent> onAdd) {
+	ContextMenu contextMenu = new ContextMenu();
+	MenuItem addItem = new MenuItem("Add");
+	contextMenu.getItems().add(addItem);
+	addItem.setOnAction(onAdd::accept);
+	return contextMenu;
     }
 
-    public String getName() {
-	return name;
-    }
-
-    public LocalDate getDate() {
-	return date;
-    }
 }

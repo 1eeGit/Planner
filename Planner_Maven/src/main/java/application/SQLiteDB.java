@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -226,6 +227,21 @@ public class SQLiteDB {
 	} catch (SQLException e) {
 	    System.out.println(e.getMessage());
 	}
+    }
+
+    public static int getEventID(String url) {
+	// get the last event ID
+	String getEventID = "SELECT MAX(id) FROM event";
+	try (Connection conn = DriverManager.getConnection(url);
+		PreparedStatement PS = conn.prepareStatement(getEventID);
+		ResultSet RS = PS.executeQuery()) {
+	    if (RS.next()) {
+		return RS.getInt(1);
+	    }
+	} catch (SQLException e) {
+	    System.out.println(e.getMessage());
+	}
+	return 0;
     }
 
     /**

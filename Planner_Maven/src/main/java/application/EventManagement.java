@@ -27,8 +27,10 @@ public class EventManagement implements EventManager {
      * database.
      */
     @Override
-    public void createEvent(String taskName, int taskStatus, LocalDate taskDate, int taskRelatedAct) {
-	// return new Task(taskName, taskStatus, taskDate, taskRelatedAct);
+    public void createEvent(String taskName, int taskStatus, LocalDate taskDate) {
+	SQLiteDB.insertEvent(taskName, 0, taskDate.toString(), 2, db);
+	int taskID = SQLiteDB.getEventID(db);
+	SQLiteDB.insertTask(taskID, 0, db); // update in task table, actID is 0 by default
     }
 
     @Override
@@ -39,10 +41,7 @@ public class EventManagement implements EventManager {
 
     @Override
     public void createEvent(String goalName, LocalDate goalDdl, int goalStatus) {
-	// insert new goal into database and get the new goal ID then set it to the new
-	// goal object
 	SQLiteDB.insertEvent(goalName, 0, goalDdl.toString(), 1, db);
-	// return new Goal(goalName, goalDdl, goalStatus);
     }
 
     /**

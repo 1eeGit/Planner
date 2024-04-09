@@ -21,6 +21,8 @@ import javafx.scene.layout.GridPane;
  * show required month calendar in the left side of UI
  */
 public class CalendarPane extends GridPane {
+    // static variable to store and update the selected date between different panes
+    public static LocalDate selectedDate = LocalDate.now();
     private int year;
     private int month;
     private int day;
@@ -38,6 +40,7 @@ public class CalendarPane extends GridPane {
 	calendar = new GregorianCalendar();
 	month = currentDate.getMonthValue();
 	year = currentDate.getYear();
+
 	updateCalendar();
     }
 
@@ -48,9 +51,10 @@ public class CalendarPane extends GridPane {
 	/**
 	 * Clear the existing view
 	 */
-	this.getChildren().remove(dayPane);
+	// this.getChildren().remove(dayPane);
+	this.getChildren().clear();
 	dayPane.getChildren().clear();
-
+	this.add(dayPane, 1, 1);
 	/**
 	 * Set calendar head line as Labels: Monday - Sunday
 	 */
@@ -58,7 +62,7 @@ public class CalendarPane extends GridPane {
 	int dayMax = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 	int firstDay = calendar.get(Calendar.DAY_OF_WEEK);
 	calendarTest(this);
-	String dayHeader[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+	String dayHeader[] = { "Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri" };
 	for (int i = 0; i <= 6; i++) {
 	    Label headerLabel = new Label(dayHeader[i]);
 	    GridPane.setHalignment(headerLabel, HPos.CENTER);
@@ -108,7 +112,7 @@ public class CalendarPane extends GridPane {
 	    // mouseEvent(this, dayLabel);
 	    dayPane.add(dayLabel, (i + firstDay + dayMax - 2) % 7, (i + firstDay + dayMax - 2) / 7 + 2);
 	}
-	this.add(dayPane, 1, 1);
+
 	this.add(LastMbutton, 0, 0);
 	this.add(NextMbutton, 2, 0);
 
@@ -118,11 +122,8 @@ public class CalendarPane extends GridPane {
 	LastMbutton.setOnAction(e -> {
 	    int currentMonth = getMonth();
 	    if (currentMonth > 1) {
-		// setMonth(currentMonth - 1);
 		datePicker.setValue(LocalDate.of(year, month - 1, 1));
 	    } else {
-		// setYear(getYear() - 1);
-		// setMonth(12);
 		datePicker.setValue(LocalDate.of(year - 1, 12, 1));
 		;
 	    }
@@ -130,28 +131,26 @@ public class CalendarPane extends GridPane {
 	NextMbutton.setOnAction(e -> {
 	    int currentMonth = getMonth();
 	    if (currentMonth < 12) {
-		// setMonth(currentMonth + 1);
 		datePicker.setValue(LocalDate.of(year, month + 1, 1));
+		updateCalendar();
 	    } else {
-		// setYear(getYear() + 1);
-		// setMonth(1);
 		datePicker.setValue(LocalDate.of(year + 1, 1, 1));
-		;
+		updateCalendar();
 	    }
 	});
 
 	/**
 	 * Set the date picker to select the date in the top middle of calendar the
 	 * setting of the date picker will trigger the action event to update the
-	 * calendar ???? some how it is not working as expected:???? Children: duplicate
-	 * children added: parent = Grid hgap=0.0, vgap=0.0, alignment=TOP_LEFT
+	 * calendar
 	 */
-	datePicker.setValue(LocalDate.of(year, month, LocalDate.now().getDayOfMonth()));
+	datePicker.setValue(LocalDate.of(year, month, selectedDate.getDayOfMonth()));
 	datePicker.setOnAction(e -> {
-	    LocalDate selectedDate = datePicker.getValue();
+	    selectedDate = datePicker.getValue();
 	    if (selectedDate.getYear() != year || selectedDate.getMonthValue() != month) {
 		setYear(selectedDate.getYear());
 		setMonth(selectedDate.getMonthValue());
+		setDay(selectedDate.getDayOfMonth());
 		updateCalendar();
 	    }
 	});
@@ -195,6 +194,8 @@ public class CalendarPane extends GridPane {
 	dayLabel.setOnMouseClicked(e -> {
 	    dayLabel.setStyle("-fx-border-color: red; -fx-padding: 5px;");
 	    System.out.println("Calendar test: Year " + year + " Month " + month + " Day " + date + " clicked!");
+	    selectedDate = LocalDate.of(year, month, date);
+	    updateCalendar();
 	});
     }
 
@@ -205,6 +206,8 @@ public class CalendarPane extends GridPane {
 	calendar.set(Calendar.YEAR, year);
 	calendar.set(Calendar.MONTH, month - 1); // 1-based
 	showCalendar();
+	// invoke the updateTask method to make sure the task list is updated
+	TaskPane.updateTask();
     }
 
     /**
@@ -233,7 +236,6 @@ public class CalendarPane extends GridPane {
 
     public void setYear(int year) {
 	this.year = year;
-	updateCalendar();
     }
 
     public int getMonth() {
@@ -242,7 +244,6 @@ public class CalendarPane extends GridPane {
 
     public void setMonth(int month) {
 	this.month = month;
-	updateCalendar();
     }
 
     public int getDay() {
@@ -251,7 +252,6 @@ public class CalendarPane extends GridPane {
 
     public void setDay(int day) {
 	this.day = day;
-	updateCalendar();
     }
 
     public Calendar getCalendar() {

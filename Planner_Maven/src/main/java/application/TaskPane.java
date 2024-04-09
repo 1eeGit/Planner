@@ -7,10 +7,9 @@ package application;
 import java.time.LocalDate;
 import java.util.List;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -19,19 +18,33 @@ import javafx.scene.layout.HBox;
  * TaskPane class for goal view in the right side Tab of the UI
  */
 public class TaskPane extends GridPane {
+    static EventManagement eventManager = new EventManagement();
+    static GridPane taskListPane = new GridPane();
+    static Label header = new Label(LocalDate.now().toString());
+    static HBox taskHeader = new HBox(20);
 
-    ObservableList<Task> taskList = FXCollections.observableArrayList();
-
+    /**
+     * Default constructor
+     */
     public TaskPane() {
-	GridPane taskPane = new GridPane();
-	HBox taskHeader = new HBox(20);
-	Label header = new Label(LocalDate.now().toString());
 	header.setStyle("-fx-font-size: 15px; -fx-font-family: Arial; -fx-text-fill: BLACK;");
-	taskHeader.getChildren().add(header);
 	taskHeader.setPrefWidth(180);
 	taskHeader.setAlignment(Pos.CENTER);
+	// set default size of the taskListPane, or addContextMenu will not work in
+	// empty area
+	taskListPane.setPrefSize(300, 200);
+	this.getChildren().clear();
 	this.add(taskHeader, 1, 0);
-	updateTaskPane();
+	this.add(taskListPane, 1, 1);
+	ContextMenu contextMenu = EventDialog.addContextMenu(a -> addTask());
+	taskListPane.setOnContextMenuRequested(e -> {
+	    // only show addContextMenu when right click on empty area
+	    // which means the target is not HBox - taskView
+	    if (!(e.getTarget() instanceof HBox)) {
+		contextMenu.show(taskListPane, e.getScreenX(), e.getScreenY());
+	    }
+	});
+	updateTask();
     }
 
     /**
@@ -40,7 +53,7 @@ public class TaskPane extends GridPane {
      * 
      * @param task
      */
-    public HBox taskView(Event task) {
+    public static HBox taskView(Event task) {
 	CheckBox taskStatus = new CheckBox();
 	taskStatus.setSelected(task.isStatus());
 	HBox cboxHbox = new HBox(15);
@@ -55,32 +68,64 @@ public class TaskPane extends GridPane {
 	HBox taskView = new HBox(20);
 	taskView.setPrefWidth(180);
 	taskView.getChildren().addAll(cboxHbox, nameHbox);
+
+	/**
+	 * Set the userData of the goalView to the goal object, so that the goal object
+	 * can be retrieved when the goalView is clicked
+	 */
+	ContextMenu contextMenu = EventDialog.createContextMenu(a -> addTask(), a -> deleteTask(task),
+		a -> editTask(task));
+	taskView.setOnContextMenuRequested(e -> contextMenu.show(taskView, e.getScreenX(), e.getScreenY()));
+
 	return taskView;
+    }
+
+    private static void editTask(Event event) {
+
+    }
+
+    private static void deleteTask(Event event) {
+	eventManager.deleteEvent(event);
+	updateTask();
+    }
+
+    private static void addTask() {
+	EventDialog dialog = new EventDialog();
+	EventData data = dialog.showAndGetData();
+	EventManagement eventManager = new EventManagement();
+	if (data != null) {
+	    eventManager.createEvent(data.getName(), 2, data.getDate());
+	    updateTask();
+	}
     }
 
     /**
      * Show all the tasks for a single day in the taskPane
      */
-    public void showTask() {
-	GridPane taskListPane = new GridPane();
-	this.getChildren().remove(taskListPane);
+    public static void showTask() {
+	taskListPane.getChildren().clear();
 	int taskRow = 0;
+	header = new Label(CalendarPane.selectedDate.toString());
+	taskHeader.getChildren().clear();
+	taskHeader.getChildren().add(header);
 	/** change database name when not testing **/
 	EventManagement eventManagement = new EventManagement();
-	/** show today's tasks by default */
-	LocalDate date = LocalDate.now();
+	/**
+	 * show today's tasks by default, updates pane view as static selectedDate
+	 * changes
+	 */
+	LocalDate date = CalendarPane.selectedDate;
 	List<Event> taskList = eventManagement.getEventList(2, "testDB.db", date);
 	for (Event task : taskList) {
 	    HBox taskView = taskView(task);
 	    taskListPane.add(taskView, 1, taskRow++);
 	}
-	this.add(taskListPane, 1, 1);
     }
 
     /**
      * Update the taskPane
      */
-    public void updateTaskPane() {
+    public static void updateTask() {
 	showTask();
     }
 }
