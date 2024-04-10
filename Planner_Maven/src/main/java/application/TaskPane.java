@@ -18,10 +18,11 @@ import javafx.scene.layout.HBox;
  * TaskPane class for goal view in the right side Tab of the UI
  */
 public class TaskPane extends GridPane {
-    static EventManagement eventManager = new EventManagement();
-    static GridPane taskListPane = new GridPane();
-    static Label header = new Label(LocalDate.now().toString());
-    static HBox taskHeader = new HBox(20);
+    EventManagement eventManager = new EventManagement();
+    GridPane taskListPane = new GridPane();
+    Label header = new Label(LocalDate.now().toString());
+    HBox taskHeader = new HBox(20);
+    public static TaskPane taskPane = new TaskPane();
 
     /**
      * Default constructor
@@ -53,7 +54,7 @@ public class TaskPane extends GridPane {
      * 
      * @param task
      */
-    public static HBox taskView(Event task) {
+    public HBox taskView(Event task) {
 	CheckBox taskStatus = new CheckBox();
 	taskStatus.setSelected(task.isStatus());
 	// set listener to update the status of the task
@@ -81,7 +82,6 @@ public class TaskPane extends GridPane {
 	ContextMenu contextMenu = EventDialog.createContextMenu(a -> addTask(), a -> deleteTask(task),
 		a -> editTask(task));
 	taskView.setOnContextMenuRequested(e -> contextMenu.show(taskView, e.getScreenX(), e.getScreenY()));
-
 	return taskView;
     }
 
@@ -90,7 +90,7 @@ public class TaskPane extends GridPane {
      * 
      * @param event
      */
-    private static void editTask(Event event) {
+    private void editTask(Event event) {
 	EventDialog dialog = new EventDialog();
 	EventData data = dialog.showAndGetData();
 	if (data != null) {
@@ -100,12 +100,12 @@ public class TaskPane extends GridPane {
 
     }
 
-    private static void deleteTask(Event event) {
+    private void deleteTask(Event event) {
 	eventManager.deleteEvent(event);
 	updateTask();
     }
 
-    private static void addTask() {
+    private void addTask() {
 	EventDialog dialog = new EventDialog();
 	EventData data = dialog.showAndGetData();
 	EventManagement eventManager = new EventManagement();
@@ -118,7 +118,7 @@ public class TaskPane extends GridPane {
     /**
      * Show all the tasks for a single day in the taskPane
      */
-    public static void showTask() {
+    public void showTask() {
 	taskListPane.getChildren().clear();
 	int taskRow = 0;
 	/**
@@ -137,13 +137,13 @@ public class TaskPane extends GridPane {
 	    taskListPane.add(taskView, 1, taskRow++);
 	}
 	// show total amount and completion rate???
-	header.setText(CalendarPane.selectedDate.toString() + "   Total: " + taskList.size() + " tasks" + " %");
+	header.setText(CalendarPane.selectedDate.toString() + "   Total: " + taskList.size() + " tasks");
     }
 
     /**
      * Update the taskPane
      */
-    public static void updateTask() {
+    public void updateTask() {
 	showTask();
     }
 }

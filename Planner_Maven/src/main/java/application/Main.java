@@ -31,7 +31,7 @@ public class Main extends Application {
 	    CalendarPane dayPane = new CalendarPane();
 	    TabPane tabPane = new TabPane();
 	    String[] tabNames = { "Daily Task", "Goal", "Yearly Review" };
-	    Pane[] panes = { new TaskPane(), new GoalPane(), new YearPane() };
+	    Pane[] panes = { TaskPane.taskPane, new GoalPane(), YearPane.yearPane };
 	    for (int i = 0; i < tabNames.length; i++) {
 		Tab tab = new Tab(tabNames[i]);
 		tab.setContent(panes[i]);

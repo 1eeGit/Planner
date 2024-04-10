@@ -97,16 +97,9 @@ public class EventManagement implements EventManager {
 
 	List<Event> events = new ArrayList<>();
 	try (Connection conn = DriverManager.getConnection(url); PreparedStatement PS = conn.prepareStatement(query)) {
-	    if (type != 1) {
-		// set date parameter for task and activity, as the only placeholder '?' is
-		// date, but not working properly
-		// PS.setDate(1, java.sql.Date.valueOf(date));
-		// System.out.println(query);
-		// System.out.println("Query with date set: " + PS.toString());
-	    }
 	    try (ResultSet RS = PS.executeQuery()) {
 		while (RS.next()) {
-		    Boolean status = RS.getInt("status") == 1;
+		    Boolean status = RS.getInt("status") == 1;// 1 is completed, 0 is incomplete
 		    /**
 		     * Not using parameter date directly, because when getting Goal objects, we will
 		     * set date to NULL since we are showing all the goals not a specific day. Thus

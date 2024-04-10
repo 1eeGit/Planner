@@ -40,7 +40,6 @@ public class CalendarPane extends GridPane {
 	calendar = new GregorianCalendar();
 	month = currentDate.getMonthValue();
 	year = currentDate.getYear();
-
 	updateCalendar();
     }
 
@@ -144,12 +143,16 @@ public class CalendarPane extends GridPane {
 	datePicker.setValue(LocalDate.of(year, month, selectedDate.getDayOfMonth()));
 	datePicker.setOnAction(e -> {
 	    selectedDate = datePicker.getValue();
-	    if (selectedDate.getYear() != year || selectedDate.getMonthValue() != month) {
-		setYear(selectedDate.getYear());
-		setMonth(selectedDate.getMonthValue());
-		setDay(selectedDate.getDayOfMonth());
+	    System.out.println("Calendar test: Year " + year + " Month " + month + " Day "
+		    + selectedDate.getDayOfMonth() + " selected!");
+	    setYear(selectedDate.getYear());
+	    setMonth(selectedDate.getMonthValue());
+	    setDay(selectedDate.getDayOfMonth());
+	    TaskPane.taskPane.updateTask();
+
+	    if (selectedDate.getYear() != year || selectedDate.getMonthValue() != month)
+		// only update when not the current month
 		updateCalendar();
-	    }
 	});
 	GridPane.setHalignment(datePicker, HPos.CENTER);
 	GridPane.setValignment(datePicker, VPos.CENTER);
@@ -202,9 +205,10 @@ public class CalendarPane extends GridPane {
     public void updateCalendar() {
 	calendar.set(Calendar.YEAR, year);
 	calendar.set(Calendar.MONTH, month - 1); // 1-based
+	System.out.println("Calendar update to: " + " Year: " + year + " " + ",Month: " + month);
 	showCalendar();
 	// invoke the updateTask method to make sure the task list is updated
-	TaskPane.updateTask();
+	TaskPane.taskPane.updateTask();
     }
 
     /**

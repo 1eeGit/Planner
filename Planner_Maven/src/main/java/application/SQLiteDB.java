@@ -264,7 +264,8 @@ public class SQLiteDB {
 
     /**
      * Check if the year table is, or needed to be updated difference = 0: no need
-     * to update; difference > 0: update; <0: report error.
+     * to update; difference > 0: update; <0: DROP & RECREATE year table, for task
+     * deleted.
      * 
      * @return
      */
@@ -289,7 +290,7 @@ public class SQLiteDB {
      */
     public static int[] updateData(int difference) {
 	int[] result = new int[2];
-	String SQL = "SELECT COUNT(*)AS num_in_DAY, e.date AS date FROM event e "
+	String SQL = "SELECT COUNT(*) AS num_in_DAY, e.date AS date FROM event e "
 		+ "WHERE TYPE = 2 AND strftime('%Y', e.date) = '2024' " + "GROUP BY date " + "ORDER BY date DESC "
 		+ "LIMIT ?;";
 	try (Connection conn = DriverManager.getConnection(url); PreparedStatement PS = conn.prepareStatement(SQL);) {
@@ -299,10 +300,10 @@ public class SQLiteDB {
 		// convert date type to LocalDate to match format
 		String dateString = RS.getString("date");
 		LocalDate date = LocalDate.parse(dateString);
-		System.out.println(date);
+		// System.out.println(date);
 		int dayID = date.getDayOfYear();
 		int taskNum = RS.getInt("num_in_DAY");
-		System.out.println(taskNum);
+		// System.out.println(taskNum);
 		/**
 		 * insertYear(dayID, taskNum); cannot insert inside this method: [SQLITE_BUSY]
 		 * The database file is locked (database is locked)
@@ -317,18 +318,58 @@ public class SQLiteDB {
     }
 
     /**
-     * Insert data into year table
+     * Insert data into year table if dayID not exist; else update the taskNum.
      * 
      * @param dayID
      * @param taskNum
      */
-    public static void insertYear(int dayID, int taskNum) {
-	String insertSQL = "INSERT INTO year (dayID, taskNum) VALUES (?,?)";
+    public static void updateYearData(int dayID, int taskNum) {
+	String insertOrUpdateSQL = "INSERT INTO year (dayID, taskNum) VALUES (?, ?) ON CONFLICT(dayID) DO UPDATE SET taskNum = taskNum + excluded.taskNum;";
 	try (Connection conn = DriverManager.getConnection(url);
-		PreparedStatement PS = conn.prepareStatement(insertSQL)) {
-	    PS.setInt(1, dayID);
-	    PS.setInt(2, taskNum);
-	    PS.executeUpdate();
+		PreparedStatement pstmt = conn.prepareStatement(insertOrUpdateSQL)) {
+	    pstmt.setInt(1, dayID);
+	    pstmt.setInt(2, taskNum);
+	    pstmt.executeUpdate();
+	} catch (SQLException e) {
+	    System.out.println(e.getMessage());
+	}
+    }
+
+    /**
+     * Get the number of tasks for day[i]
+     * 
+     * @param dayID
+     * @return
+     */
+    public static int getTaskNum(int dayID) {
+	String SQL = "SELECT taskNum FROM year WHERE dayID = ?";
+	try (Connection conn = DriverManager.getConnection(url); PreparedStatement pstmt = conn.prepareStatement(SQL)) {
+	    pstmt.setInt(1, dayID);
+	    try (ResultSet rs = pstmt.executeQuery()) {
+		if (rs.next()) {
+		    return rs.getInt("taskNum");
+		}
+	    }
+	} catch (SQLException e) {
+	    System.out.println("Error retrieving task number: " + e.getMessage());
+	    e.printStackTrace();
+	}
+	return 0;
+    }
+
+    /**
+     * Drop and recreate year table
+     */
+    public static void dropANDcreateYear() {
+	String dropYearTable = "DROP TABLE year";
+	String createYearTable = "CREATE TABLE IF NOT EXISTS year (" + "	dayID INT," + "    taskNum INT,"
+		+ "    PRIMARY KEY (dayID));";
+	try (Connection conn = DriverManager.getConnection(url);
+		PreparedStatement PS1 = conn.prepareStatement(dropYearTable);
+		PreparedStatement PS2 = conn.prepareStatement(createYearTable);) {
+	    PS1.executeUpdate();
+	    PS2.executeUpdate();
+	    conn.commit();
 	} catch (SQLException e) {
 	    System.out.println(e.getMessage());
 	}
@@ -347,17 +388,36 @@ public class SQLiteDB {
 	insertEvent("Goal 1", 0, "2023-11-30", 1);
 	insertEvent("Goal 2", 0, "2024-04-10", 1);
 	insertEvent("Goal 3", 1, today, 1);
-	insertEvent("Task 1", 0, "2023-11-30", 2);
-	insertEvent("Task 2", 1, "2024-04-10", 2);
-	insertEvent("Task 3", 0, today, 2);
-	insertEvent("Activity 1", 0, "2023-11-30", 3);
-	insertEvent("Activity 2", 1, "2024-04-10", 3);
-	insertEvent("Activity 3", 0, today, 3);
+	// task data for testing:3,5,3+1,1,1,1
+	insertEvent("Java project submission", 1, "2024-04-09", 2);
+	insertEvent("Java project documentation", 1, "2024-04-09", 2);
+	insertEvent("Java ", 1, "2024-04-09", 2);
+
+	insertEvent("Java peer-review submission", 1, "2024-04-17", 2);
+	insertEvent("Java peer-review documentation", 1, "2024-04-17", 2);
+	insertEvent("homework 1 ", 1, "2024-04-17", 2);
+	insertEvent("homework 2 ", 1, "2024-04-17", 2);
+	insertEvent("homework 3 ", 1, "2024-04-17", 2);
+
+	insertEvent("other", 1, today, 2);
+	insertEvent("Task 1", 0, today, 2);
+	insertEvent("Task 2", 0, today, 2);
+
+	insertEvent("exam ", 1, "2024-05-17", 2);
+	insertEvent("exam ", 1, "2024-12-31", 2);
+	insertEvent("exam ", 1, "2024-08-31", 2);
+	insertEvent("exam ", 1, "2024-09-01", 2);
+
 	insertTask(4, 7);
 	insertTask(5, 8);
 	insertTask(6, 9);
+	// note that activities are not showing in UI, only in database for now.
+	insertEvent("Activity 1", 0, "2023-11-30", 3);
+	insertEvent("Activity 2", 1, "2024-04-10", 3);
+	insertEvent("Activity 3", 0, today, 3);
 	insertActivity(7, "10:00", "12:00", 4);
 	insertActivity(8, "14:00", "16:00", 5);
 	insertActivity(9, "18:00", "20:00", 6);
     }
+
 }
