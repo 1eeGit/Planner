@@ -77,10 +77,6 @@ public class CalendarPane extends GridPane {
 	Calendar LastMCalendar = (Calendar) calendar.clone();
 	LastMCalendar.set(Calendar.MONTH, month - 2);// 1-based
 	int LastMdayMax = LastMCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-	System.out.println("Calendar test: Last month dayMax: " + LastMdayMax);
-	/**
-	 * Set last month days as Labels: current month - 1, Set different color as gray
-	 */
 	for (int i = 0; i < firstDay - 1; i++) {
 	    Label dayLabel = new Label(String.valueOf(LastMdayMax - firstDay + i + 2));
 	    dayLabel.setMinSize(40, 40);
@@ -117,7 +113,8 @@ public class CalendarPane extends GridPane {
 	this.add(NextMbutton, 2, 0);
 
 	/**
-	 * Set event actions for last month and next month buttons
+	 * Set event actions for last month and next month buttons; All the actions are
+	 * controlled by datePicker.
 	 */
 	LastMbutton.setOnAction(e -> {
 	    int currentMonth = getMonth();

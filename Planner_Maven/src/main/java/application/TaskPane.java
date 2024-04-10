@@ -121,21 +121,23 @@ public class TaskPane extends GridPane {
     public static void showTask() {
 	taskListPane.getChildren().clear();
 	int taskRow = 0;
-	header = new Label(CalendarPane.selectedDate.toString());
-	taskHeader.getChildren().clear();
-	taskHeader.getChildren().add(header);
-	/** change database name when not testing **/
-	EventManagement eventManagement = new EventManagement();
 	/**
 	 * show today's tasks by default, updates pane view as static selectedDate
 	 * changes
 	 */
 	LocalDate date = CalendarPane.selectedDate;
+	/** change database name when not testing **/
+	EventManagement eventManagement = new EventManagement();
 	List<Event> taskList = eventManagement.getEventList(2, "testDB.db", date);
+	taskHeader.getChildren().clear();
+	header = new Label();
+	taskHeader.getChildren().add(header);
 	for (Event task : taskList) {
 	    HBox taskView = taskView(task);
 	    taskListPane.add(taskView, 1, taskRow++);
 	}
+	// show total amount and completion rate???
+	header.setText(CalendarPane.selectedDate.toString() + "   Total: " + taskList.size() + " tasks" + " %");
     }
 
     /**

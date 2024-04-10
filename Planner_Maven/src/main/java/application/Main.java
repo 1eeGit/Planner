@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -21,18 +22,21 @@ import javafx.stage.Stage;
  * Calendar, TabPane(Task/Goal)
  */
 public class Main extends Application {
+    public static String db = "testDB.db";
+    public static String url = "PlannerDB.db";
+
     @Override
     public void start(Stage primaryStage) {
 	try {
 	    CalendarPane dayPane = new CalendarPane();
 	    TabPane tabPane = new TabPane();
-	    Tab tab_task = new Tab("Task");
-	    TaskPane taskPane = new TaskPane();
-	    tab_task.setContent(taskPane);
-	    Tab tab_goal = new Tab("Goal");
-	    GoalPane goalPane = new GoalPane();
-	    tab_goal.setContent(goalPane);
-	    tabPane.getTabs().addAll(tab_task, tab_goal);
+	    String[] tabNames = { "Daily Task", "Goal", "Yearly Review" };
+	    Pane[] panes = { new TaskPane(), new GoalPane(), new YearPane() };
+	    for (int i = 0; i < tabNames.length; i++) {
+		Tab tab = new Tab(tabNames[i]);
+		tab.setContent(panes[i]);
+		tabPane.getTabs().add(tab);
+	    }
 	    SplitPane splitPane = new SplitPane();
 	    splitPane.getItems().addAll(dayPane, tabPane);
 
@@ -49,13 +53,9 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-
-	// SQLiteDB.createDatabase("PlannerDB");
-
-	// test the database
-	String db = "testDB.db";
 	Path path = Paths.get(db);
-
+	// SQLiteDB.createDatabase("PlannerDB");
+	// test the database: will delete and recreate every time
 	try {
 	    boolean deleted = Files.deleteIfExists(path);
 	    if (deleted) {

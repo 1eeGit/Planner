@@ -199,11 +199,4 @@ public class GoalPane extends GridPane {
 	}
     }
 
-    /**
-     * Add new goal via EventDialog
-     */
-    private void addGoal(EventData data) {
-	updateGoal();
-    }
-
 }

@@ -28,9 +28,9 @@ public class EventManagement implements EventManager {
      */
     @Override
     public void createEvent(String taskName, int taskStatus, LocalDate taskDate) {
-	SQLiteDB.insertEvent(taskName, 0, taskDate.toString(), 2, db);
-	int taskID = SQLiteDB.getEventID(db);
-	SQLiteDB.insertTask(taskID, 0, db); // update in task table, actID is 0 by default
+	SQLiteDB.insertEvent(taskName, 0, taskDate.toString(), 2);
+	int taskID = SQLiteDB.getEventID();
+	SQLiteDB.insertTask(taskID, 0); // update in task table, actID is 0 by default
     }
 
     @Override
@@ -41,7 +41,7 @@ public class EventManagement implements EventManager {
 
     @Override
     public void createEvent(String goalName, LocalDate goalDdl, int goalStatus) {
-	SQLiteDB.insertEvent(goalName, 0, goalDdl.toString(), 1, db);
+	SQLiteDB.insertEvent(goalName, 0, goalDdl.toString(), 1);
     }
 
     /**
@@ -49,7 +49,7 @@ public class EventManagement implements EventManager {
      */
     @Override
     public void deleteEvent(Event event) {
-	SQLiteDB.deleteEvent(event.getID(), db);
+	SQLiteDB.deleteEvent(event.getID());
     }
 
     /**
@@ -60,7 +60,7 @@ public class EventManagement implements EventManager {
      */
     @Override
     public void updateEstatus(Event event, int status) {
-	SQLiteDB.updateEstatus(status, event.getID(), db);
+	SQLiteDB.updateEstatus(status, event.getID());
     }
 
     /**
@@ -68,7 +68,7 @@ public class EventManagement implements EventManager {
      */
     @Override
     public void modifyEvent(Event event, String newName, LocalDate newDate) {
-	SQLiteDB.updateEvent(event.getID(), newName, newDate.toString(), event.getType(), db);
+	SQLiteDB.updateEvent(event.getID(), newName, newDate.toString(), event.getType());
     }
 
     /**
@@ -130,7 +130,6 @@ public class EventManagement implements EventManager {
 		    }
 		    if (event != null) {
 			events.add(event);
-
 		    }
 		}
 	    }
