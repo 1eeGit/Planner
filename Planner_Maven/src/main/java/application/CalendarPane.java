@@ -21,13 +21,21 @@ import javafx.scene.layout.GridPane;
  * show required month calendar in the left side of UI
  */
 public class CalendarPane extends GridPane {
+    private LocalDate currentDate = LocalDate.now();
+
+    /**
+     * test the calendar with random date private static LocalDate currentDate =
+     * LocalDate.parse("2023-06-30"); public static LocalDate selectedDate =
+     * currentDate;
+     */
+
     // static variable to store and update the selected date between different panes
     public static LocalDate selectedDate = LocalDate.now();
+
     private int year;
     private int month;
     private int day;
     private Calendar calendar;
-    private LocalDate currentDate = LocalDate.now();
     private GridPane dayPane = new GridPane();
     private Button LastMbutton = new Button("<");
     private Button NextMbutton = new Button(">");
@@ -40,6 +48,7 @@ public class CalendarPane extends GridPane {
 	calendar = new GregorianCalendar();
 	month = currentDate.getMonthValue();
 	year = currentDate.getYear();
+	System.out.println("Calendar test: Year " + year + " Month " + month + " Day " + selectedDate.getDayOfMonth());
 	updateCalendar();
     }
 
@@ -57,12 +66,15 @@ public class CalendarPane extends GridPane {
 	/**
 	 * Set calendar head line as Labels: Monday - Sunday
 	 */
-	int currentDay = currentDate.getDayOfMonth();
+	int currentDay = selectedDate.getDayOfMonth();
 	int dayMax = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+	/**
+	 * Get the first day of the MONTH, 1-based, 1 for Monday, 7 for Sunday.
+	 */
 	int firstDay = calendar.get(Calendar.DAY_OF_WEEK);
-	int adjustment = (firstDay == 1) ? 6 : firstDay - 2;
 	// calendarTest(this);
-	String dayHeader[] = { "Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri" };
+	String dayHeader[] = { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 	for (int i = 0; i <= 6; i++) {
 	    Label headerLabel = new Label(dayHeader[i]);
 	    GridPane.setHalignment(headerLabel, HPos.CENTER);
@@ -77,12 +89,12 @@ public class CalendarPane extends GridPane {
 	Calendar LastMCalendar = (Calendar) calendar.clone();
 	LastMCalendar.set(Calendar.MONTH, month - 2);// 1-based
 	int LastMdayMax = LastMCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-	for (int i = 0; i < adjustment; i++) {
-	    Label dayLabel = new Label(String.valueOf(LastMdayMax - adjustment + i + 1));
+	for (int i = 1; i < firstDay; i++) {
+	    Label dayLabel = new Label(String.valueOf(LastMdayMax - firstDay + 1 + i));
 	    dayLabel.setMinSize(40, 40);
 	    dayLabel.setAlignment(Pos.CENTER);
 	    dayLabel.setStyle("-fx-text-fill: gray;");
-	    dayPane.add(dayLabel, i % 7, 2);
+	    dayPane.add(dayLabel, i % 7 - 1, 2);
 	}
 
 	/**
@@ -94,19 +106,19 @@ public class CalendarPane extends GridPane {
 	    dayLabel.setAlignment(Pos.CENTER);
 	    setDayStyle(i, currentDay, dayLabel);
 	    mouseEvent(this, dayLabel, i);
-	    dayPane.add(dayLabel, (i + adjustment - 1) % 7, (i + adjustment - 1) / 7 + 2);
+	    dayPane.add(dayLabel, (i + firstDay - 2) % 7, (i + firstDay - 2) / 7 + 2);
 	}
 
 	/**
 	 * Set next month days as Labels: current month + 1, Set different color as gray
 	 */
-	for (int i = 1; i <= 42 - dayMax - firstDay + 2; i++) {
+	for (int i = 1; i <= 43 - dayMax - firstDay; i++) {
 	    Label dayLabel = new Label(String.valueOf(i));
 	    dayLabel.setMinSize(40, 40);
 	    dayLabel.setAlignment(Pos.CENTER);
 	    dayLabel.setStyle("-fx-text-fill: gray;");
 	    // mouseEvent(this, dayLabel);
-	    dayPane.add(dayLabel, ((dayMax + adjustment + i - 2) % 7), (dayMax + adjustment + i - 1) / 7 + 2);
+	    dayPane.add(dayLabel, (dayMax + firstDay + i - 2) % 7, (dayMax + firstDay + i - 2) / 7 + 2);
 	}
 
 	this.add(LastMbutton, 0, 0);
@@ -124,16 +136,16 @@ public class CalendarPane extends GridPane {
 		datePicker.setValue(LocalDate.of(year - 1, 12, 1));
 		;
 	    }
+	    updateCalendar();
 	});
 	NextMbutton.setOnAction(e -> {
 	    int currentMonth = getMonth();
 	    if (currentMonth < 12) {
 		datePicker.setValue(LocalDate.of(year, month + 1, 1));
-		updateCalendar();
 	    } else {
 		datePicker.setValue(LocalDate.of(year + 1, 1, 1));
-		updateCalendar();
 	    }
+	    updateCalendar();
 	});
 
 	/**
@@ -154,10 +166,11 @@ public class CalendarPane extends GridPane {
 	    setMonth(selectedDate.getMonthValue());
 	    setDay(selectedDate.getDayOfMonth());
 	    TaskPane.taskPane.updateTask();
-
-	    if (selectedDate.getYear() != year || selectedDate.getMonthValue() != month)
+	    updateCalendar();
+	    if (selectedDate.getYear() != year || selectedDate.getMonthValue() != month) {
 		// only update when not the current month
 		updateCalendar();
+	    }
 	});
 	GridPane.setHalignment(datePicker, HPos.CENTER);
 	GridPane.setValignment(datePicker, VPos.CENTER);
@@ -226,7 +239,7 @@ public class CalendarPane extends GridPane {
 	int month = cp.getMonth();
 	int dayMax = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 	int firstDay = calendar.get(Calendar.DAY_OF_WEEK);
-	int adjustment = (firstDay == 1) ? 6 : firstDay - 2;
+	// int adjustment = (firstDay == 1) ? 6 : firstDay - 2;
 	System.out.println("Calendar test: " + " Year is:" + year + " " + ",Month is:" + month + ",dayMax is:" + dayMax
 		+ ",1st weekday is: " + firstDay);
     }

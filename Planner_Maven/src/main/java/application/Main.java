@@ -7,6 +7,8 @@ package application;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -66,6 +68,8 @@ public class Main extends Application {
 	 * }
 	 */
 	// SQLiteDB.testDB(db);
+	Calendar calendar = new GregorianCalendar();
+
 	launch(args);
     }
 }
