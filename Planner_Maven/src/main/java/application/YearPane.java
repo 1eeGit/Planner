@@ -11,7 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
 /**
- * YearPane for daily event visualization
+ * YearPane for daily event visualization in the whole year. Different color for
+ * different amount of tasks within the day.
  */
 public class YearPane extends GridPane {
     private int year;
@@ -45,7 +46,7 @@ public class YearPane extends GridPane {
 	    int taskNum = SQLiteDB.getTaskNum(i);
 	    if (taskNum > 0) {
 		label.setStyle("-fx-border-color: lightgray; -fx-background-color: " + setColor(taskNum) + ";");
-		System.out.println(taskNum + " &&& " + setColor(taskNum));
+		// System.out.println(taskNum + " &&& " + setColor(taskNum));
 	    } else {
 		label.setStyle("-fx-border-color: lightgray; ");
 	    }
@@ -54,17 +55,23 @@ public class YearPane extends GridPane {
     }
 
     /**
-     * 
+     * First check if the year table is up-to-date, if not, update the year table
+     * first, then draw the cells
      */
     public void showYear() {
 	int difference = SQLiteDB.updateYearCheck();
+	System.out.println("difference is:" + difference);
 	if (difference > 0) {
 	    int[] result = SQLiteDB.updateData(difference);
 	    SQLiteDB.updateYearData(result[0], result[1]);
 	    showYear();
 	} else if (difference == 0) {
 	    System.out.println("YearPane is already up-to-date.");
-	} else { // difference < 0: task is deleted
+	} else {
+	    /**
+	     * difference < 0: indicates that task might be deleted Delete and Recreate the
+	     * year table, then update view.
+	     */
 	    System.out.println("YearPane: RECREATED.");
 	    SQLiteDB.dropANDcreateYear();
 	    showYear();

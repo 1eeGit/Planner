@@ -18,7 +18,7 @@ import javafx.scene.layout.HBox;
  * TaskPane class for goal view in the right side Tab of the UI
  */
 public class TaskPane extends GridPane {
-    EventManagement eventManager = new EventManagement();
+    public static EventManagement eventManager = new EventManagement();
     GridPane taskListPane = new GridPane();
     Label header = new Label(LocalDate.now().toString());
     HBox taskHeader = new HBox(20);
@@ -127,8 +127,8 @@ public class TaskPane extends GridPane {
 	 */
 	LocalDate date = CalendarPane.selectedDate;
 	/** change database name when not testing **/
-	EventManagement eventManagement = new EventManagement();
-	List<Event> taskList = eventManagement.getEventList(2, "testDB.db", date);
+	// EventManagement eventManagement = new EventManagement();
+	List<Event> taskList = eventManager.getEventList(2, "testDB.db", date);
 	taskHeader.getChildren().clear();
 	header = new Label();
 	taskHeader.getChildren().add(header);
@@ -145,5 +145,6 @@ public class TaskPane extends GridPane {
      */
     public void updateTask() {
 	showTask();
+	YearPane.yearPane.showYear();
     }
 }

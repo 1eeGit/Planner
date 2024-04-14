@@ -60,6 +60,7 @@ public class CalendarPane extends GridPane {
 	int currentDay = currentDate.getDayOfMonth();
 	int dayMax = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 	int firstDay = calendar.get(Calendar.DAY_OF_WEEK);
+	int adjustment = (firstDay == 1) ? 6 : firstDay - 2;
 	calendarTest(this);
 	String dayHeader[] = { "Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri" };
 	for (int i = 0; i <= 6; i++) {
@@ -76,8 +77,8 @@ public class CalendarPane extends GridPane {
 	Calendar LastMCalendar = (Calendar) calendar.clone();
 	LastMCalendar.set(Calendar.MONTH, month - 2);// 1-based
 	int LastMdayMax = LastMCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-	for (int i = 0; i < firstDay - 1; i++) {
-	    Label dayLabel = new Label(String.valueOf(LastMdayMax - firstDay + i + 2));
+	for (int i = 0; i < adjustment; i++) {
+	    Label dayLabel = new Label(String.valueOf(LastMdayMax - adjustment + i + 1));
 	    dayLabel.setMinSize(40, 40);
 	    dayLabel.setAlignment(Pos.CENTER);
 	    dayLabel.setStyle("-fx-text-fill: gray;");
@@ -93,19 +94,19 @@ public class CalendarPane extends GridPane {
 	    dayLabel.setAlignment(Pos.CENTER);
 	    setDayStyle(i, currentDay, dayLabel);
 	    mouseEvent(this, dayLabel, i);
-	    dayPane.add(dayLabel, (i + firstDay - 2) % 7, (i + firstDay - 2) / 7 + 2);
+	    dayPane.add(dayLabel, (i + adjustment - 1) % 7, (i + adjustment - 1) / 7 + 2);
 	}
 
 	/**
 	 * Set next month days as Labels: current month + 1, Set different color as gray
 	 */
-	for (int i = 1; i <= 43 - dayMax - firstDay; i++) {
+	for (int i = 1; i <= 42 - dayMax - firstDay + 2; i++) {
 	    Label dayLabel = new Label(String.valueOf(i));
 	    dayLabel.setMinSize(40, 40);
 	    dayLabel.setAlignment(Pos.CENTER);
 	    dayLabel.setStyle("-fx-text-fill: gray;");
 	    // mouseEvent(this, dayLabel);
-	    dayPane.add(dayLabel, (i + firstDay + dayMax - 2) % 7, (i + firstDay + dayMax - 2) / 7 + 2);
+	    dayPane.add(dayLabel, ((dayMax + adjustment + i - 2) % 7), (dayMax + adjustment + i - 1) / 7 + 2);
 	}
 
 	this.add(LastMbutton, 0, 0);
@@ -219,6 +220,7 @@ public class CalendarPane extends GridPane {
 	int month = cp.getMonth();
 	int dayMax = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 	int firstDay = calendar.get(Calendar.DAY_OF_WEEK);
+	int adjustment = (firstDay == 1) ? 6 : firstDay - 2;
 	System.out.println("Calendar test: " + " Year is:" + year + " " + ",Month is:" + month + ",dayMax is:" + dayMax
 		+ ",1st weekday is: " + firstDay);
     }

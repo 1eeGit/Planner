@@ -26,7 +26,7 @@ public class GoalPane extends GridPane {
     static VBox goalList = new VBox(15);
 
     // Create eventManager object, or the method cannot be invoked
-    EventManagement eventManager = new EventManagement();
+    // EventManagement eventManager = new EventManagement();
     /**
      * Default width and style for the goalPane: 60 for the status circle, 100 for
      * goal name, 80 for status Circle color: BLACK for complete, GREY for
@@ -131,7 +131,7 @@ public class GoalPane extends GridPane {
 	goalStatusBox.setSelected(event.isStatus());
 	goalStatusBox.setOnAction(e -> {
 	    int newStatus = goalStatusBox.isSelected() ? 1 : 0;
-	    eventManager.updateEstatus(event, newStatus);
+	    TaskPane.eventManager.updateEstatus(event, newStatus);
 	    updateGoal();
 	});
 
@@ -181,7 +181,7 @@ public class GoalPane extends GridPane {
      * @param event
      */
     private void deleteGoal(Event event) {
-	eventManager.deleteEvent(event);
+	TaskPane.eventManager.deleteEvent(event);
 	updateGoal();
     }
 
@@ -194,7 +194,7 @@ public class GoalPane extends GridPane {
 	EventDialog dialog = new EventDialog();
 	EventData data = dialog.showAndGetData();
 	if (data != null) {
-	    eventManager.modifyEvent(event, data.getName(), data.getDate());
+	    TaskPane.eventManager.modifyEvent(event, data.getName(), data.getDate());
 	    updateGoal();
 	}
     }

@@ -272,7 +272,7 @@ public class SQLiteDB {
     public static int updateYearCheck() {
 	int difference = 0;
 	// calculate the difference between expectNum and realNum
-	String SQL = "SELECT ((SELECT COUNT(DISTINCT e.date)  FROM event e WHERE type=2 AND strftime('%Y', e.date) = '2024' )- (SELECT COUNT(*)  FROM year y))AS difference;";
+	String SQL = "SELECT ((SELECT COUNT(DISTINCT e.date)  FROM event e WHERE TYPE=2 AND strftime('%Y', e.date) = '2024' )- (SELECT COUNT(*)  FROM year y))AS difference;";
 	try (Connection conn = DriverManager.getConnection(url);
 		PreparedStatement PS = conn.prepareStatement(SQL);
 		ResultSet RS = PS.executeQuery()) {
@@ -286,12 +286,12 @@ public class SQLiteDB {
     }
 
     /**
-     * Get and update data in year table
+     * Get and update data in year table for this year (2024)
      */
     public static int[] updateData(int difference) {
 	int[] result = new int[2];
 	String SQL = "SELECT COUNT(*) AS num_in_DAY, e.date AS date FROM event e "
-		+ "WHERE TYPE = 2 AND strftime('%Y', e.date) = '2024' " + "GROUP BY date " + "ORDER BY date DESC "
+		+ "WHERE TYPE = 2 AND strftime('%Y', e.date) = '2024' " + "GROUP BY date " + "ORDER BY e.id DESC "
 		+ "LIMIT ?;";
 	try (Connection conn = DriverManager.getConnection(url); PreparedStatement PS = conn.prepareStatement(SQL);) {
 	    PS.setInt(1, difference);
