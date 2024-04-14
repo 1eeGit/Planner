@@ -167,10 +167,6 @@ public class CalendarPane extends GridPane {
 	    setDay(selectedDate.getDayOfMonth());
 	    TaskPane.taskPane.updateTask();
 	    updateCalendar();
-	    if (selectedDate.getYear() != year || selectedDate.getMonthValue() != month) {
-		// only update when not the current month
-		updateCalendar();
-	    }
 	});
 	GridPane.setHalignment(datePicker, HPos.CENTER);
 	GridPane.setValignment(datePicker, VPos.CENTER);
