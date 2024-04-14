@@ -5,7 +5,6 @@
 
 package application;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -35,6 +34,8 @@ public class Main extends Application {
 	    for (int i = 0; i < tabNames.length; i++) {
 		Tab tab = new Tab(tabNames[i]);
 		tab.setContent(panes[i]);
+		// disable the close button
+		tab.setClosable(false);
 		tabPane.getTabs().add(tab);
 	    }
 	    SplitPane splitPane = new SplitPane();
@@ -55,20 +56,16 @@ public class Main extends Application {
     public static void main(String[] args) {
 	Path path = Paths.get(db);
 	// SQLiteDB.createDatabase("PlannerDB");
-	// test the database: will delete and recreate every time
-	try {
-	    boolean deleted = Files.deleteIfExists(path);
-	    if (deleted) {
-		System.out.println("Database deleted successfully.");
-	    } else {
-		System.out.println("Database file not found.");
-	    }
-	} catch (Exception e) {
-	    System.out.println("Error deleting the database file.");
-	    e.printStackTrace();
-	}
-	SQLiteDB.testDB(db); // test the database
-
+	/**
+	 * The following try block will delete and recreate DB every time, commented:
+	 * 
+	 * try { boolean deleted = Files.deleteIfExists(path); if (deleted) {
+	 * System.out.println("Database deleted successfully."); } else {
+	 * System.out.println("Database file not found."); } } catch (Exception e) {
+	 * System.out.println("Error deleting the database file."); e.printStackTrace();
+	 * }
+	 */
+	// SQLiteDB.testDB(db);
 	launch(args);
     }
 }

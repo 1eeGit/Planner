@@ -53,7 +53,11 @@ public class EventDialog extends Dialog {
 	// Convert the result when the OK button is clicked.
 	setResultConverter(dialogButton -> {
 	    if (dialogButton == ButtonType.OK) {
-		return new EventData(nameField.getText(), datePicker.getValue());
+		if (!nameField.getText().isEmpty() && datePicker.getValue() != null) {
+		    return new EventData(nameField.getText(), datePicker.getValue());
+		} else {// show error dialog when event name or date is empty
+		    ErrorDialog().showAndWait();
+		}
 	    }
 	    return null;
 	});
@@ -96,7 +100,7 @@ public class EventDialog extends Dialog {
      * @return
      */
     public static ContextMenu addContextMenu(Consumer<ActionEvent> onAdd) {
-	// will not disappear??
+	// will not disappear on left click, also sometimes overlapping ??
 	ContextMenu contextMenu = new ContextMenu();
 	MenuItem addItem = new MenuItem("Add");
 	contextMenu.getItems().add(addItem);
@@ -104,4 +108,16 @@ public class EventDialog extends Dialog {
 	return contextMenu;
     }
 
+    /**
+     * ErrorDialog to show error message.
+     */
+    public static Dialog ErrorDialog() {
+	Dialog error = new Dialog();
+	error.setTitle("Error Message");
+	error.setHeaderText("Error:");
+	error.setContentText("Please enter both event name and date.");
+	// ?? both dialogs are closed when close button is clicked.
+	error.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+	return error;
+    }
 }

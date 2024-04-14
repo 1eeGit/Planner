@@ -33,7 +33,7 @@ public class GoalPane extends GridPane {
      * incomplete and passed DDL, WHITE for incomplete and not passed DDL HBox
      * default height:15
      */
-    Integer[] hboxWidth = { 60, 100, 100, 60 };
+    Integer[] hboxWidth = { 60, 100, 150, 60 };
     /** The string style. */
     String stringStyle = "-fx-font-size: 15px; -fx-font-family: Arial; -fx-text-fill: BLACK;";
 
@@ -51,7 +51,7 @@ public class GoalPane extends GridPane {
 	    }
 	});
 	HBox goalHeader = new HBox(20);
-	String[] header = { "", "Goal", "Status", "" };
+	String[] header = { "", "           Goal", "             Status", "" };
 	for (int i = 0; i < header.length; i++) {
 	    HBox headHbox = new HBox(15);
 	    Label headLabel = new Label(header[i]);
@@ -115,7 +115,9 @@ public class GoalPane extends GridPane {
 	    // if the goal is incomplete and the ddl is passed
 	    // compare time use .isAfter() , .isBefore() , .isEqual() instead of > , < ,==
 	    statusCircle.setFill(Color.GREY);
-	    goalStatusCell = "Incomplete";
+	    long days = ChronoUnit.DAYS.between(goalDdl, LocalDate.now());
+	    goalStatusCell = days + " days passed";
+
 	} else {// if the goal is incomplete and the ddl is not passed
 	    statusCircle.setFill(Color.WHITE);
 	    // long days = LocalDate.now().until(goalDdl).getDays();

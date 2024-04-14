@@ -383,12 +383,12 @@ public class SQLiteDB {
     public static void testDB(String db) {
 	createDatabase(db);
 	createTable();
-	/** test data: Goal 1-3; Task 4-6; Activity 7-9; task matches with activity */
+	/** test data: Goal 1-3, Task 4-18 */
 	String today = String.valueOf(java.time.LocalDate.now());
 	insertEvent("Goal 1", 0, "2023-11-30", 1);
 	insertEvent("Goal 2", 0, "2024-04-10", 1);
 	insertEvent("Goal 3", 1, today, 1);
-	// task data for testing:3,5,3+1,1,1,1
+
 	insertEvent("Java project submission", 1, "2024-04-09", 2);
 	insertEvent("Java project documentation", 1, "2024-04-09", 2);
 	insertEvent("Java ", 1, "2024-04-09", 2);
@@ -408,9 +408,24 @@ public class SQLiteDB {
 	insertEvent("exam ", 1, "2024-08-31", 2);
 	insertEvent("exam ", 1, "2024-09-01", 2);
 
+	// insert task into task table or won't show in task pane.
+	// not that in this case actID is fake and not matching with activity.
 	insertTask(4, 7);
 	insertTask(5, 8);
 	insertTask(6, 9);
+	insertTask(7, 7);
+	insertTask(8, 8);
+	insertTask(9, 9);
+	insertTask(10, 7);
+	insertTask(11, 8);
+	insertTask(12, 9);
+	insertTask(13, 7);
+	insertTask(14, 8);
+	insertTask(15, 9);
+	insertTask(16, 7);
+	insertTask(17, 8);
+	insertTask(18, 9);
+
 	// note that activities are not showing in UI, only in database for now.
 	insertEvent("Activity 1", 0, "2023-11-30", 3);
 	insertEvent("Activity 2", 1, "2024-04-10", 3);

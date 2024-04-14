@@ -61,7 +61,7 @@ public class CalendarPane extends GridPane {
 	int dayMax = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 	int firstDay = calendar.get(Calendar.DAY_OF_WEEK);
 	int adjustment = (firstDay == 1) ? 6 : firstDay - 2;
-	calendarTest(this);
+	// calendarTest(this);
 	String dayHeader[] = { "Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri" };
 	for (int i = 0; i <= 6; i++) {
 	    Label headerLabel = new Label(dayHeader[i]);
@@ -144,8 +144,12 @@ public class CalendarPane extends GridPane {
 	datePicker.setValue(LocalDate.of(year, month, selectedDate.getDayOfMonth()));
 	datePicker.setOnAction(e -> {
 	    selectedDate = datePicker.getValue();
-	    System.out.println("Calendar test: Year " + year + " Month " + month + " Day "
-		    + selectedDate.getDayOfMonth() + " selected!");
+	    /**
+	     * System.out.println("Calendar test: Year " + year + " Month " + month + " Day
+	     * "
+	     * 
+	     * + selectedDate.getDayOfMonth() + " selected!");
+	     */
 	    setYear(selectedDate.getYear());
 	    setMonth(selectedDate.getMonthValue());
 	    setDay(selectedDate.getDayOfMonth());
@@ -194,7 +198,8 @@ public class CalendarPane extends GridPane {
 	});
 	dayLabel.setOnMouseClicked(e -> {
 	    dayLabel.setStyle("-fx-border-color: red; -fx-padding: 5px;");
-	    System.out.println("Calendar test: Year " + year + " Month " + month + " Day " + date + " clicked!");
+	    // System.out.println("Calendar test: Year " + year + " Month " + month + " Day
+	    // " + date + " clicked!");
 	    selectedDate = LocalDate.of(year, month, date);
 	    updateCalendar();
 	});
@@ -206,7 +211,8 @@ public class CalendarPane extends GridPane {
     public void updateCalendar() {
 	calendar.set(Calendar.YEAR, year);
 	calendar.set(Calendar.MONTH, month - 1); // 1-based
-	System.out.println("Calendar update to: " + " Year: " + year + " " + ",Month: " + month);
+	// System.out.println("Calendar update to: " + " Year: " + year + " " + ",Month:
+	// " + month);
 	showCalendar();
 	// invoke the updateTask method to make sure the task list is updated
 	TaskPane.taskPane.updateTask();

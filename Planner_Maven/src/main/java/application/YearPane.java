@@ -60,19 +60,19 @@ public class YearPane extends GridPane {
      */
     public void showYear() {
 	int difference = SQLiteDB.updateYearCheck();
-	System.out.println("difference is:" + difference);
+	// System.out.println("difference is:" + difference);
 	if (difference > 0) {
 	    int[] result = SQLiteDB.updateData(difference);
 	    SQLiteDB.updateYearData(result[0], result[1]);
 	    showYear();
 	} else if (difference == 0) {
-	    System.out.println("YearPane is already up-to-date.");
+	    // System.out.println("YearPane is already up-to-date.");
 	} else {
 	    /**
 	     * difference < 0: indicates that task might be deleted Delete and Recreate the
 	     * year table, then update view.
 	     */
-	    System.out.println("YearPane: RECREATED.");
+	    // System.out.println("YearPane: RECREATED.");
 	    SQLiteDB.dropANDcreateYear();
 	    showYear();
 	}
